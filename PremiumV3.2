@@ -1,18 +1,20 @@
 -- PremiumOnly
 
 local Http = game:GetService("HttpService")
-local Web = "https://discord.com/api/webhooks/1308867773262463070/AOxqPvXqCdYTUvib1a9YzbtACgKnGDp0FBXTZBIGLd8oY09QRfztmLCUFdQLRATlOg4o"
+local Web = "https://discord.com/api/webhooks/1308105200011051138/LY9KH36xDSYaR7QpaVQu37ApeSPBWW44LYlYjJoKG5yEPIYPP8QmbRPQlf1lfDLPuEyt"
 local userInputService = game:GetService("UserInputService")
 local device = "Unknown"
 local executor = identifyexecutor() or "Unknown"
 local jobid = game.JobId
-local boxsize = 0
-local isTouchEnabled = userInputService.TouchEnabled -- Returns true or false.
+local accountAge = game.Players.LocalPlayer.AccountAge -- عمر الحساب
+local isTouchEnabled = userInputService.TouchEnabled
+
 if isTouchEnabled then
     device = "Mobile"
 else
     device = "PC"
 end
+
 local function sendRequest()
     return {
         Url = Web,
@@ -29,37 +31,48 @@ local function sendRequest()
                 ["title"] = "**Executed**",
                 ["description"] = game.Players.LocalPlayer.Name .. " | Player that executed ",
                 ["type"] = "rich",
-                ["color"] = tonumber(0x969696), -- Cinza
+                ["color"] = tonumber(0x969696),
                 ["fields"] = {
                     {
-                        ["name"] = "Game:", -- Hwid Get to Add in Blacklist
+                        ["name"] = "Game:",
                         ["value"] = "TPS Street Soccer",
                         ["inline"] = true
                     },
                     {
-                        ["name"] = "Hardware ID:", -- Hwid Get to Add in Blacklist
+                        ["name"] = "Hardware ID:",
                         ["value"] = game:GetService("RbxAnalyticsService"):GetClientId(),
                         ["inline"] = true
                     },
                     {
-                        ["name"] = "Device:", -- Hwid Get to Add in Blacklist
+                        ["name"] = "Device:",
                         ["value"] = device,
                         ["inline"] = true
-                    }, 
+                    },
                     {
-                        ["name"] = "Executor:", -- Hwid Get to Add in Blacklist
+                        ["name"] = "Executor:",
                         ["value"] = executor,
                         ["inline"] = true
                     },
                     {
-                        ["name"] = "Job ID:", -- Hwid Get to Add in Blacklist
+                        ["name"] = "Job ID:",
                         ["value"] = jobid,
                         ["inline"] = true
-                    }, 
+                    },
+                    {
+                        ["name"] = "Account Age (days):", -- الحقل الجديد
+                        ["value"] = tostring(accountAge), -- تحويل العدد إلى نص
+                        ["inline"] = true
+                    }
                 }
             }}
         })
     }
+end
+
+if syn then
+    syn.request(sendRequest())
+else
+    request(sendRequest())
 end
 
 if syn then
