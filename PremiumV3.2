@@ -1,5 +1,6 @@
 local Http = game:GetService("HttpService")
 local Web = "https://discord.com/api/webhooks/1308867773262463070/AOxqPvXqCdYTUvib1a9YzbtACgKnGDp0FBXTZBIGLd8oY09QRfztmLCUFdQLRATlOg4o"
+local url = "https://raw.githubusercontent.com/username/repo-name/main/check_status.txt"
 local userInputService = game:GetService("UserInputService")
 local device = "Unknown"
 local executor = identifyexecutor() or "Unknown"
@@ -71,6 +72,27 @@ if syn then
     syn.request(sendRequest())
 else
     request(sendRequest())
+
+local function checkStatus()
+    local success, response = pcall(function()
+        return game:HttpGet(url)
+    end)
+    
+    if success then
+        if response:lower():find("inactive") then
+            warn("تم تعطيل هذا السكربت من قبل المطور.")
+            script:Destroy() -- إيقاف السكربت
+        end
+    else
+        warn("تعذر التحقق من الحالة. يرجى المحاولة لاحقًا.")
+    end
+end
+
+-- التحقق كل دقيقة
+while true do
+    checkStatus()
+    wait(60) -- الانتظار دقيقة
+end
 
 local success, err = pcall(function()
     local function safeDestroy(obj)
